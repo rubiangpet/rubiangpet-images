@@ -20,7 +20,7 @@
     <script>
       async function ask() {
         const question = document.getElementById("question").value;
-        const res = await fetch("https://wandering-rice-adbf.sj-jiang36.workers.dev", {
+        const res = await fetch("https://rubiangpet-gpt.sj-jiang36.workers.dev", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: question })
