@@ -47,7 +47,7 @@
       const q = document.getElementById("input").value.trim();
       if (!q) return;
       document.getElementById("answer").innerText = "답변을 불러오는 중입니다...";
-      const res = await fetch("https://rubiangpet-gpt.sj-jjang36.workers.dev/?message=" + encodeURIComponent(q));
+      const res = await fetch("https://rubiangpet-gpt.sj-jjang36.workers.dev/?q=" + encodeURIComponent(q));
       const text = await res.text();
       document.getElementById("answer").innerText = text;
     }
