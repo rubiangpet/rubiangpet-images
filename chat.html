@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>루비앙펫 추천</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: white; /* 회색 여백 제거 */
+    }
+    #chatbox {
+      width: 100%;
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    #response {
+      white-space: pre-line;
+      margin-top: 1em;
+      padding: 10px;
+      border-radius: 8px;
+      background: #f0f0f0;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+    button {
+      padding: 10px 15px;
+      margin-top: 10px;
+      border: none;
+      background: #007bff;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="chatbox">
+    <h3 style="font-size: 18px; text-align: center; margin-bottom: 12px;">
+      📦 <strong>제품 고민?</strong> 한 줄만 남겨보세요.
+    </h3>
+    <input type="text" id="question" placeholder="ex) 피부에 좋은 간식 있어요?" />
+    <button onclick="askGPT()">질문하기</button>
+    <div id="response"></div>
+  </div>
+
+  <script>
+    const jsonUrl = "https://drive.google.com/uc?export=download&id=1uUYoZwIY8I7x-DPMAMa76wkhesj6D1i_";
+
+    async function askGPT() {
+      const q = document.getElementById("question").value;
+      const resBox = document.getElementById("response");
+      resBox.innerText = "잠시만요... ⏳";
+
+      try {
+        const data = await fetch(jsonUrl).then(r => r.json());
+        const keyword = extractKeyword(q);
+        if (!keyword) {
+          resBox.innerText = "⚠️ '알러지', '관절', '면역' 등 주요 키워드를 포함해 주세요.";
+          return;
+        }
+
+        const matched = data.filter(item => item["추천트렌드태그"]?.includes(keyword));
+        if (matched.length === 0) {
+          resBox.innerText = `❌ '${keyword}' 관련 제품을 찾을 수 없어요.`;
+          return;
+        }
+
+        const result = matched.slice(0, 3).map(item =>
+          `• ${item["제품명"]} 
+→ [상세보기](${item["상세페이지 링크"]})`
+        ).join("\n\n");
+        resBox.innerText = `✅ '${keyword}' 관련 추천 제품:\n\n` + result;
+
+      } catch (err) {
+        resBox.innerText = "❌ 오류 발생: " + err.message;
+      }
+    }
+
+    function extractKeyword(text) {
+      const keywords = ["알러지", "관절", "면역", "치아", "피부", "장건강", "치태"];
+      return keywords.find(k => text.includes(k));
+    }
+  </script>
+</body>
+</html>
