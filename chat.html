@@ -51,6 +51,7 @@
         });
 
         const result = await response.json();
+        console.log(result);
         const text = result.choices?.[0]?.message?.content || "답변 생성 실패";
         resBox.innerText = text;
       } catch (err) {
